@@ -1,4 +1,0 @@
-def nzx50_manager(dataframe):
-    """
-    dataframe should have cols: date, ID, weight, return
-    """
