@@ -1,0 +1,11 @@
+# Ignore virtual environment
+.venv_example_project/
+
+# Ignore environmental variables (passwords etc)
+.env
+
+# ignores all pdfs and data files
+*.pdf
+*.csv
+*.xls
+*.xlsx
