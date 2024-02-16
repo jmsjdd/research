@@ -10,9 +10,7 @@ def find_folder_in_current_heirarchy(folder_name):
 
     # Search for folders named '.venv_project_name' in the current directory
     for folder in os.listdir(current_dir):
-        if folder == folder_name and os.path.isdir(
-            os.path.join(current_dir, folder)
-        ):
+        if folder == folder_name and os.path.isdir(os.path.join(current_dir, folder)):
             return os.path.join(current_dir, folder)
 
     # If no '.venv_project_name' folder is found, return None

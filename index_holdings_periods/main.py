@@ -12,7 +12,7 @@ file_path = os.path.abspath(__file__)
 # Extract the directory name (folder name) from the file path
 project_name = os.path.basename(os.path.dirname(file_path))
 
-venv_name = f'.venv_{project_name}'
+venv_name = f".venv_{project_name}"
 print(venv_name)
 current_folder = os.os.path.basename(os.getcwd())
 current_dir = os.path.dirname(os.path.abspath(__file__))
