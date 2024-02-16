@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 
-def run(path_to_data):
+def manager(path_to_data):
     # Collect data
     df = pd.read_csv(path_to_data)
     df = df.astype(str)
@@ -53,3 +53,27 @@ def run(path_to_data):
     df[["weight", "return"]] = df[["weight", "return"]] / 100
 
     return df
+
+
+def create_xlsx_to_get_prices(df, path_to_save_data, filename):
+    """
+    Creates an xlsx file to load to BB to get price data
+    """
+
+    path = f"{path_to_save_data}{filename}"
+
+    df_duplicate = df.copy()
+
+    columns_to_drop = ["weight", "return"]
+
+    df_duplicate.drop(columns=columns_to_drop, inplace=True)
+
+    # Converts date to excel time
+    df_duplicate["date"] = df_duplicate["date"].apply(
+        lambda dt: (dt - datetime(1899, 12, 30)).days + 2
+    )
+
+    transposed_df = df_duplicate.transpose()
+
+    # Save the DataFrame to an Excel file
+    transposed_df.to_excel(path, index=False)

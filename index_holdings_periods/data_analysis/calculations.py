@@ -23,6 +23,9 @@ def cumulative_returns_from_constituents(
     # Rename
     df_grouped.rename(columns={"weighted_return": return_col_name}, inplace=True)
 
+    # Sort by date
+    df_grouped = df_grouped.sort_values(by='date')
+
     # Calc cumulative return
     df_grouped[portfolio_name] = df_grouped["return"].cumsum()
 
