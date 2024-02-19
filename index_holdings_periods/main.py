@@ -1,9 +1,8 @@
 import pandas as pd
 import operating_systems.helper
 from data_cleaning import data_cleaning_manager, file_creation
-
-# from data_analysis.manipulations import manipulations_helpers
-from data_analysis.manipulations import manipulations_utils
+from data_analysis.manipulations import manipulations_manager
+from data_analysis.graph import graph_helpers
 import data_analysis.calculations
 import os
 
@@ -40,20 +39,23 @@ df_weights, df_prices = data_cleaning_manager.run(
 
 # Create file to get prices
 if create_xlsx_to_get_prices == True:
-    file_creation(df, data_directory, "nzx50_constituents_for_bb.xlsx")
+    file_creation(df_weights, data_directory, "nzx50_constituents_for_bb.xlsx")
 
-# Calculate returns
-df_returns = manipulations_utils.get_returns_for_periods(df_prices, PERIODS_TO_TEST)
-
-# Merge data
-merged_df = pd.merge(df_weights, df_prices, on=["ID", "date"], how="left")
-merged_df.drop(columns=["return"], inplace=True)
-
-print(merged_df)
-
-merged_df.to_excel(
-    "C:\\Python\\research\\index_holdings_periods\\data\\output.xlsx", index=False
+# Get adjusted, weighted ctr of consituents for different periods
+df = manipulations_manager.full_index_constituents_data(
+    df_weights, df_prices, PERIODS_TO_TEST
 )
+
+# Group to index returns and cumulate
+df_index_returns = manipulations_manager.index_returns(df, PERIODS_TO_TEST)
+print(df_index_returns)
+
+# Graph
+graph_helpers.graph_cumulative_returns(df_index_returns, PERIODS_TO_TEST)
+
+# df.to_excel(
+#     "C:\\Python\\research\\index_holdings_periods\\data\\output.xlsx", index=False
+# )
 # Get cumulative returns from data frame with date, ID, weight (decimal format), return (decimal format)
 nzx50 = data_analysis.calculations.cumulative_returns_from_constituents(
     df, "date", "weight", "return", "NZX 50"
