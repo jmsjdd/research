@@ -51,15 +51,4 @@ df_index_returns = manipulations_manager.index_returns(df, PERIODS_TO_TEST)
 print(df_index_returns)
 
 # Graph
-graph_helpers.graph_cumulative_returns(df_index_returns, PERIODS_TO_TEST)
-
-# df.to_excel(
-#     "C:\\Python\\research\\index_holdings_periods\\data\\output.xlsx", index=False
-# )
-# Get cumulative returns from data frame with date, ID, weight (decimal format), return (decimal format)
-nzx50 = data_analysis.calculations.cumulative_returns_from_constituents(
-    df, "date", "weight", "return", "NZX 50"
-)
-
-# Graph the cumulative returns
-data_analysis.calculations.graph_cumulative_returns(nzx50, "Growth of the NZX 50")
+graph_helpers.plot_line_graph(df_index_returns, PERIODS_TO_TEST)

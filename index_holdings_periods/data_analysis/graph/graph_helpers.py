@@ -2,42 +2,32 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def graph_cumulative_returns(df, list_of_periods):
+def plot_line_graph(df, list_of_periods):
     """
-    Generate a line graph of cumulative returns.
+    Create a line graph for the DataFrame with columns specified in list_of_periods and the 'date' column.
 
-    :param df: DataFrame with date in the first column and cumulative returns in subsequent columns.
-    :param title: Title of the graph.
+    Parameters:
+    - df: DataFrame containing the data with the 'date' column and columns specified in list_of_periods.
+    - list_of_periods: List of column names to be plotted.
+
+    Example:
+    plot_line_graph(df, ['1 month rebalancing cumulation', '6 month rebalancing cumulation', ...])
     """
-    # Set the style using Seaborn
-    sns.set(style="whitegrid")
+    # Plot the data
+    plt.figure(figsize=(10, 6))  # Adjust figure size if needed
+    for period in list_of_periods:
+        col_name = f"{period} month rebalancing cumulation"
+        plt.plot(df["date"], df[col_name], label=period)
 
-    # Get the column names excluding the first column (date column)
-    columns_to_plot = df.columns[1:]
-
-    # Create a new figure and axis
-    plt.figure(figsize=(12, 8))
-    ax = plt.subplot(111)
-
-    # Use a color palette with distinct colors for each line
-    colors = sns.color_palette("husl", len(columns_to_plot))
-
-    # Iterate over each column and plot the line on the same axis
-    for i, column in enumerate(columns_to_plot):
-        ax.plot(df["date"], df[column], label=column, color=colors[i % len(colors)])
-
-    # Set labels and title with nicer fonts
-    plt.xlabel("Date", fontsize=14, fontname="Arial")
-    plt.ylabel("Cumulative Returns", fontsize=14, fontname="Arial")
-    plt.title(title, fontsize=16, fontweight="bold", fontname="Arial")
-    plt.xticks(fontsize=12, fontname="Arial", rotation=45)
-    plt.yticks(fontsize=12, fontname="Arial")
-
-    # Add legend outside the plot
-    plt.legend(loc="upper left", bbox_to_anchor=(1, 1), fontsize=12)
-
-    # Tight layout to prevent overlapping labels
-    plt.tight_layout()
+    # Add labels and title
+    plt.xlabel("Date")
+    plt.ylabel("Cumulative Returns")
+    plt.title("Cumulative Returns Over Time")
+    plt.legend(loc="upper left")  # Adjust legend location if needed
+    plt.grid(True)
 
     # Show the plot
+    plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
+    plt.tight_layout()  # Adjust layout to prevent clipping of labels
     plt.show()
+    print("hi")
