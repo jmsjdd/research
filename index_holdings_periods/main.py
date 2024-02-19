@@ -9,7 +9,8 @@ import os
 create_xlsx_to_get_prices = False
 FILENAME_CONSTITUENT_WEIGHTS = "index_nzx50.csv"
 FILENAME_CONSTITUENT_PRICING = "index_history_pricing.xlsx"
-PATH_TO_DATA_FOLDER = "C:\\Users\\JamesJudd\\Documents\\Data\\"
+PERIODS_TO_TEST = [1, 6, 12, 24, 36, 60, 120]
+# PATH_TO_DATA_FOLDER = "C:\\Python\\research\\index_holdings_periods\\data\\"
 
 # Get paths
 current_directory = os.getcwd()
@@ -31,7 +32,9 @@ venv_directory = f"{current_directory}\\{project_name}\\{venv_name}\\"
 #     operating_systems.helper.activate_virtualenv()
 
 # Clean data
-data_cleaning.manager.run(constituent_weights_directory, constituent_pricing_directory)
+data_cleaning.manager.run(
+    constituent_weights_directory, constituent_pricing_directory, PERIODS_TO_TEST
+)
 
 # Create file to get prices
 if create_xlsx_to_get_prices == True:

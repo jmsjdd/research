@@ -1,8 +1,23 @@
 import pandas as pd
+import numpy as np
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
+
+def end_of_month(date):
+    return date + relativedelta(day=31)
 
 
 def constituent_weights(path_to_data):
+    """
+    Parse constituent weight data from CSV file.
+
+    Parameters:
+    - path_to_data (str): Path to the CSV file containing constituent weight data.
+
+    Returns:
+    - df (DataFrame): Parsed DataFrame containing constituent weight data.
+    """
     # Collect data
     df = pd.read_csv(path_to_data)
     df = df.astype(str)
@@ -50,12 +65,24 @@ def constituent_weights(path_to_data):
 
     # Divide percentages by 100
     df[["weight", "return"]] = df[["weight", "return"]].astype(float)
-    df[["weight", "return"]] = df[["weight", "return"]] / 100
+    df[["weight"]] = df[["weight"]] / 100
+
+    # Make date end of month
+    df["date"] = df["date"].apply(end_of_month)
 
     return df
 
 
 def constituent_pricing(path_to_data):
+    """
+    Parse constituent pricing data from Excel file.
+
+    Parameters:
+    - path_to_data (str): Path to the Excel file containing constituent pricing data.
+
+    Returns:
+    - df (DataFrame): Parsed DataFrame containing constituent pricing data.
+    """
     # Collect data
     df = pd.read_excel(path_to_data)
     df = df.astype(str)
@@ -96,5 +123,22 @@ def constituent_pricing(path_to_data):
     df["date"] = df["date"].apply(
         lambda x: datetime.fromordinal(datetime(1899, 12, 30).toordinal() + int(x) - 2)
     )
+
+    # Make date end of month
+    df["date"] = df["date"].apply(end_of_month)
+
+    return df
+
+
+def get_returns_for_periods(df, list_of_periods):
+    # Sort the DataFrame by 'ID' and 'date'
+    df.sort_values(by=["ID", "date"], inplace=True)
+
+    # Calculate forward returns for each period
+    for period in list_of_periods:
+        forward_return_col = f"return_{period}"
+        df[forward_return_col] = (
+            df.groupby("ID")["price_t"].shift(-period) / df["price_t"] - 1
+        )
 
     return df
