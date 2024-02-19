@@ -6,6 +6,4 @@
 
 # ignores all pdfs and data files
 *.pdf
-*.csv
-*.xls
-*.xlsx
+

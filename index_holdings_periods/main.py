@@ -1,12 +1,14 @@
 import pandas as pd
 import operating_systems.helper
 import data_cleaning.manager
+import data_cleaning.file_creation
 import data_analysis.calculations
 import os
 
 # Manual inputs
 create_xlsx_to_get_prices = False
 FILENAME_CONSTITUENT_WEIGHTS = "index_nzx50.csv"
+FILENAME_CONSTITUENT_PRICING = "index_history_pricing.xlsx"
 PATH_TO_DATA_FOLDER = "C:\\Users\\JamesJudd\\Documents\\Data\\"
 
 # Get paths
@@ -17,6 +19,7 @@ project_name = os.path.basename(os.path.dirname(current_file_path))
 # Get directories
 data_directory = f"{current_directory}\\{project_name}\\data\\"
 constituent_weights_directory = f"{data_directory}{FILENAME_CONSTITUENT_WEIGHTS}"
+constituent_pricing_directory = f"{data_directory}{FILENAME_CONSTITUENT_PRICING}"
 venv_name = f".venv_{project_name}"
 venv_directory = f"{current_directory}\\{project_name}\\{venv_name}\\"
 
@@ -28,12 +31,13 @@ venv_directory = f"{current_directory}\\{project_name}\\{venv_name}\\"
 #     operating_systems.helper.activate_virtualenv()
 
 # Clean data
-df = data_cleaning.manager.clean_consituents(constituent_weights_directory)
+df = data_cleaning.manager.constituent_weights(constituent_weights_directory)
+df2 = data_cleaning.manager.constituent_pricing(constituent_pricing_directory)
 
 # Create file to get prices
 if create_xlsx_to_get_prices == True:
-    data_cleaning.manager.create_xlsx_to_get_prices(
-        df, data_directory, "nzx50_constituents_and_dates.csv"
+    data_cleaning.manager.file_creation(
+        df, data_directory, "nzx50_constituents_for_bb.xlsx"
     )
 
 
