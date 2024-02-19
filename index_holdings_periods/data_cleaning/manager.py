@@ -2,7 +2,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 
 
-def manager(path_to_data):
+def clean_consituents(path_to_data):
     # Collect data
     df = pd.read_csv(path_to_data)
     df = df.astype(str)
@@ -73,7 +73,19 @@ def create_xlsx_to_get_prices(df, path_to_save_data, filename):
         lambda dt: (dt - datetime(1899, 12, 30)).days + 2
     )
 
-    transposed_df = df_duplicate.transpose()
+    # Add a blank row after each existing row
+    result = pd.concat(
+        [
+            df_duplicate,
+            pd.DataFrame(index=df_duplicate.index, columns=df_duplicate.columns),
+        ],
+        axis=0,
+    ).sort_index(kind="merge")
+
+    transposed_df = result.transpose()
 
     # Save the DataFrame to an Excel file
-    transposed_df.to_excel(path, index=False)
+    transposed_df.to_excel(
+        path,
+        index=False,
+    )
