@@ -1,7 +1,9 @@
 import pandas as pd
 import operating_systems.helper
-import data_cleaning.manager
-import data_cleaning.file_creation
+from data_cleaning import data_cleaning_manager, file_creation
+
+# from data_analysis.manipulations import manipulations_helpers
+from data_analysis.manipulations import manipulations_utils
 import data_analysis.calculations
 import os
 
@@ -32,17 +34,26 @@ venv_directory = f"{current_directory}\\{project_name}\\{venv_name}\\"
 #     operating_systems.helper.activate_virtualenv()
 
 # Clean data
-data_cleaning.manager.run(
-    constituent_weights_directory, constituent_pricing_directory, PERIODS_TO_TEST
+df_weights, df_prices = data_cleaning_manager.run(
+    constituent_weights_directory, constituent_pricing_directory
 )
 
 # Create file to get prices
 if create_xlsx_to_get_prices == True:
-    data_cleaning.manager.file_creation(
-        df, data_directory, "nzx50_constituents_for_bb.xlsx"
-    )
+    file_creation(df, data_directory, "nzx50_constituents_for_bb.xlsx")
 
+# Calculate returns
+df_returns = manipulations_utils.get_returns_for_periods(df_prices, PERIODS_TO_TEST)
 
+# Merge data
+merged_df = pd.merge(df_weights, df_prices, on=["ID", "date"], how="left")
+merged_df.drop(columns=["return"], inplace=True)
+
+print(merged_df)
+
+merged_df.to_excel(
+    "C:\\Python\\research\\index_holdings_periods\\data\\output.xlsx", index=False
+)
 # Get cumulative returns from data frame with date, ID, weight (decimal format), return (decimal format)
 nzx50 = data_analysis.calculations.cumulative_returns_from_constituents(
     df, "date", "weight", "return", "NZX 50"

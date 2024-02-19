@@ -1,11 +1,6 @@
 import pandas as pd
-import numpy as np
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
-
-
-def end_of_month(date):
-    return date + relativedelta(day=31)
+from . import data_cleaning_utils
 
 
 def constituent_weights(path_to_data):
@@ -68,7 +63,7 @@ def constituent_weights(path_to_data):
     df[["weight"]] = df[["weight"]] / 100
 
     # Make date end of month
-    df["date"] = df["date"].apply(end_of_month)
+    df["date"] = df["date"].apply(data_cleaning_utils.end_of_month)
 
     return df
 
@@ -125,20 +120,6 @@ def constituent_pricing(path_to_data):
     )
 
     # Make date end of month
-    df["date"] = df["date"].apply(end_of_month)
-
-    return df
-
-
-def get_returns_for_periods(df, list_of_periods):
-    # Sort the DataFrame by 'ID' and 'date'
-    df.sort_values(by=["ID", "date"], inplace=True)
-
-    # Calculate forward returns for each period
-    for period in list_of_periods:
-        forward_return_col = f"return_{period}"
-        df[forward_return_col] = (
-            df.groupby("ID")["price_t"].shift(-period) / df["price_t"] - 1
-        )
+    df["date"] = df["date"].apply(data_cleaning_utils.end_of_month)
 
     return df
