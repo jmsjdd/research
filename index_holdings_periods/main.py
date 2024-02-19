@@ -31,8 +31,7 @@ venv_directory = f"{current_directory}\\{project_name}\\{venv_name}\\"
 #     operating_systems.helper.activate_virtualenv()
 
 # Clean data
-df = data_cleaning.manager.constituent_weights(constituent_weights_directory)
-df2 = data_cleaning.manager.constituent_pricing(constituent_pricing_directory)
+data_cleaning.manager.run(constituent_weights_directory, constituent_pricing_directory)
 
 # Create file to get prices
 if create_xlsx_to_get_prices == True:
