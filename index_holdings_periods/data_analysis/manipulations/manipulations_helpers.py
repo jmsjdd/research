@@ -1,5 +1,60 @@
 import pandas as pd
 import numpy as np
+from . import manipulations_utils
+
+
+def create_all_dates_ids_df(df):
+    # Step 1: Get unique dates and unique IDs
+    unique_dates = df["date"].unique()
+    unique_ids = df["ID"].unique()
+
+    # Step 2: Create a new DataFrame with all IDs applied to all dates
+    all_dates = []
+    all_ids = []
+    for date in unique_dates:
+        all_dates.extend([date] * len(unique_ids))
+        all_ids.extend(unique_ids)
+
+    # Create a DataFrame with all IDs applied to all dates
+    df_all = pd.DataFrame({"date": all_dates, "ID": all_ids})
+
+    return df_all
+
+
+def weights_for_all_periods(df_weights, list_of_periods):
+    df = create_all_dates_ids_df(df_weights)
+    
+    for period in list_of_periods
+        new_col_name = f'weight_{period}'
+        for i in range(0, len(df)):
+                df[new_col_name].iloc[i] = 0
+            for m in range(0, period):
+                dt = manipulations_utils.subtract_months(df['date'].iloc[i], m)
+                df[new_col_name].iloc[i] = (index(df_weights['weight'],match(1,(df[ID].iloc[i] = df_weights[ID])*(dt = df_weights['date']),0))/ period ) + df[new_col_name].iloc[i]
+    
+    print(df)
+    # Step 1: Get unique dates and unique IDs
+    unique_dates = df["Date"].unique()
+    unique_ids = df["ID"].unique()
+
+    # Step 2: Create a new DataFrame with all IDs applied to all dates
+    all_dates = []
+    all_ids = []
+    for date in unique_dates:
+        all_dates.extend([date] * len(unique_ids))
+        all_ids.extend(unique_ids)
+
+    # Create a DataFrame with all IDs applied to all dates
+    df_all = pd.DataFrame({"Date": all_dates, "ID": all_ids})
+
+    # df_completed = pd.DataFrame()
+
+    # for period in list_of_periods:
+    #     for dt in df['date']:
+    #         for id in df['ID']:
+    #     new_col = f"weight_{period}"
+    #     df_completed['date'] =
+    #     df_completed
 
 
 def get_returns_for_periods(df, list_of_periods):
@@ -111,4 +166,12 @@ For
  1966, returns are only calculated from 1966-2016 which is why all analyses comparing the 
  monthly, annual and three yearly rebalancing periods cover the period 1966-2016 instead of 1963-2016.
 
+ 
+  Returns are calculated following the methodology used by Hou, Xue and Zhang (2017). 
+ For a holding period greater than one month, such as when rebalancing is annual, there are 12 sub-deciles, each of which is initiated in 
+ the prior 12-month period. The average of the sub-decile one-month forward returns 
+ at each month is then taken as the monthly return of that decile for that month. In 
+ the three-yearly rebalancing case, because there are not 36 different sub-deciles until 
+ 1966, returns are only calculated from 1966-2016 which is why all analyses comparing the 
+ monthly, annual and three yearly rebalancing periods cover the period 1966-2016 instead of 1963-2016.
 """

@@ -2,6 +2,10 @@ from . import manipulations_helpers
 
 
 def full_index_constituents_data(df_weights, df_prices, list_of_periods):
+    df_weights_all_periods = manipulations_helpers.weights_for_all_periods(
+        df_weights, list_of_periods
+    )
+    print(df_weights_all_periods)
     df_returns = manipulations_helpers.get_returns_for_periods(
         df_prices, list_of_periods
     )
