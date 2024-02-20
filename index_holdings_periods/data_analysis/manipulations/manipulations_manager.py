@@ -12,12 +12,16 @@ def full_index_constituents_data(df_weights, df_prices, list_of_periods):
     manipulations_helpers.weighted_return(df, list_of_periods)
     manipulations_helpers.adj_weighted_return(df, list_of_periods)
 
+    print("Full consituent ctrs calculated")
     return df
 
 
 def index_returns(df, list_of_periods):
     df_grouped = manipulations_helpers.group_and_sum_intervals(df, list_of_periods)
-    df_cumulative_returns = manipulations_helpers.cumulative_returns(
+    df_monthly_returns = manipulations_helpers.sum_different_periods(
         df_grouped, list_of_periods
+    )
+    df_cumulative_returns = manipulations_helpers.cumulative_returns(
+        df_monthly_returns, list_of_periods
     )
     return df_cumulative_returns

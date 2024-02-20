@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 
 def get_returns_for_periods(df, list_of_periods):
@@ -65,9 +66,28 @@ def group_and_sum_intervals(
     return grouped_df
 
 
-def cumulative_returns(df, list_of_periods):
+def sum_different_periods(df, list_of_periods):
+    df = df.sort_values(by="date", ascending=True)  # Sort in ascending order by date
+
     for period in list_of_periods:
         old_col_name = f"adj_weighted_return_{period}"
+        new_col_name = (
+            f"rolling_sum_{period}"  # Update column name to reflect rolling sum
+        )
+
+        # Calculate the rolling sum using a vectorized operation
+        df[new_col_name] = df[old_col_name].rolling(window=period, min_periods=1).sum()
+
+        # Where the original column has 0 values, replace with NaN
+        df.loc[df[old_col_name] == 0, new_col_name] = np.nan
+
+    return df
+
+
+def cumulative_returns(df, list_of_periods):
+    df = df.sort_values(by="date", ascending=True)  # Sort in ascending order by date
+    for period in list_of_periods:
+        old_col_name = f"rolling_sum_{period}"
         new_col_name = f"{period} month rebalancing cumulation"
         df[new_col_name] = (1 + df[old_col_name]).cumprod() - 1
 

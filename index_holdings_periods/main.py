@@ -36,6 +36,7 @@ venv_directory = f"{current_directory}\\{project_name}\\{venv_name}\\"
 df_weights, df_prices = data_cleaning_manager.run(
     constituent_weights_directory, constituent_pricing_directory
 )
+print("Data cleaned")
 
 # Create file to get prices
 if create_xlsx_to_get_prices == True:
@@ -45,10 +46,15 @@ if create_xlsx_to_get_prices == True:
 df = manipulations_manager.full_index_constituents_data(
     df_weights, df_prices, PERIODS_TO_TEST
 )
+df.to_excel(
+    "C:\\Python\\research\\index_holdings_periods\\data\\output.xlsx", index=False
+)
 
 # Group to index returns and cumulate
 df_index_returns = manipulations_manager.index_returns(df, PERIODS_TO_TEST)
 print(df_index_returns)
-
+df_index_returns.to_excel(
+    "C:\\Python\\research\\index_holdings_periods\\data\\output2.xlsx", index=False
+)
 # Graph
 graph_helpers.plot_line_graph(df_index_returns, PERIODS_TO_TEST)
