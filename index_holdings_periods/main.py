@@ -3,6 +3,10 @@ import operating_systems.helper
 from data_cleaning import data_cleaning_manager, file_creation
 from data_analysis.manipulations import manipulations_manager
 from data_analysis.graph import graph_helpers
+from data_analysis.portfolio_build import portfolio_build_manager
+from data_analysis.monthly_constituent_returns import (
+    monthly_constituent_returns_helpers,
+)
 import data_analysis.calculations
 import os
 
@@ -33,7 +37,7 @@ venv_directory = f"{current_directory}\\{project_name}\\{venv_name}\\"
 #     operating_systems.helper.activate_virtualenv()
 
 # Clean data
-df_weights, df_prices = data_cleaning_manager.run(
+df_weights, df_prices, df_all = data_cleaning_manager.run(
     constituent_weights_directory, constituent_pricing_directory
 )
 print("Data cleaned")
@@ -41,6 +45,12 @@ print("Data cleaned")
 # Create file to get prices
 if create_xlsx_to_get_prices == True:
     file_creation(df_weights, data_directory, "nzx50_constituents_for_bb.xlsx")
+
+# Add returns
+monthly_constituent_returns_helpers.monthly_returns(df_all)
+
+# Build portfolios for each period
+portfolio_build_manager.run(df_all, PERIODS_TO_TEST)
 
 # Get adjusted, weighted ctr of consituents for different periods
 df = manipulations_manager.full_index_constituents_data(

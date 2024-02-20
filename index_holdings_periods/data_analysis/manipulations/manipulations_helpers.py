@@ -23,16 +23,32 @@ def create_all_dates_ids_df(df):
 
 def weights_for_all_periods(df_weights, list_of_periods):
     df = create_all_dates_ids_df(df_weights)
-    
-    for period in list_of_periods
-        new_col_name = f'weight_{period}'
-        for i in range(0, len(df)):
-                df[new_col_name].iloc[i] = 0
-            for m in range(0, period):
-                dt = manipulations_utils.subtract_months(df['date'].iloc[i], m)
-                df[new_col_name].iloc[i] = (index(df_weights['weight'],match(1,(df[ID].iloc[i] = df_weights[ID])*(dt = df_weights['date']),0))/ period ) + df[new_col_name].iloc[i]
-    
+
+    # Pre-process df_weights for faster lookups
+    weights_dict = {}
+    for index, row in df_weights.iterrows():
+        key = (row["date"], row["ID"])
+        weights_dict[key] = row["weight"]
+
+    for period in list_of_periods:
+        new_col_name = f"weight_{period}"
+        df[new_col_name] = 0
+
+        for i in range(len(df)):
+            dates = [
+                manipulations_utils.subtract_months(df["date"].iloc[i], m)
+                for m in range(float(period))
+            ]
+            ids = [df["ID"].iloc[i]] * int(period)
+            weights = [
+                weights_dict.get((dates[j], ids[j]), 0) for j in range(int(period))
+            ]
+            df.loc[i, new_col_name] = sum(weights)
+
     print(df)
+
+    return df
+
     # Step 1: Get unique dates and unique IDs
     unique_dates = df["Date"].unique()
     unique_ids = df["ID"].unique()
