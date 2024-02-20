@@ -1,13 +1,10 @@
 import pandas as pd
 import operating_systems.helper
 from data_cleaning import data_cleaning_manager, file_creation
-from data_analysis.manipulations import manipulations_manager
 from data_analysis.graph import graph_helpers
 from data_analysis.portfolio_build import portfolio_build_manager
-from data_analysis.monthly_constituent_returns import (
-    monthly_constituent_returns_helpers,
-)
-import data_analysis.calculations
+from data_analysis.returns import returns_helpers
+from data_analysis.index_aggregation import index_aggregation_helpers
 import os
 
 # Manual inputs
@@ -47,24 +44,41 @@ if create_xlsx_to_get_prices == True:
     file_creation(df_weights, data_directory, "nzx50_constituents_for_bb.xlsx")
 
 # Add returns
-monthly_constituent_returns_helpers.monthly_returns(df_all)
+returns_helpers.monthly_constituent_returns(df_all)
 
 # Build portfolios for each period
 portfolio_build_manager.run(df_all, PERIODS_TO_TEST)
 
-# Get adjusted, weighted ctr of consituents for different periods
-df = manipulations_manager.full_index_constituents_data(
-    df_weights, df_prices, PERIODS_TO_TEST
-)
-df.to_excel(
-    "C:\\Python\\research\\index_holdings_periods\\data\\output.xlsx", index=False
+# Aggregate constituents into single portfolio
+df_index = index_aggregation_helpers.aggregate_index_from_constituents(
+    df_all, PERIODS_TO_TEST
 )
 
-# Group to index returns and cumulate
-df_index_returns = manipulations_manager.index_returns(df, PERIODS_TO_TEST)
-print(df_index_returns)
-df_index_returns.to_excel(
-    "C:\\Python\\research\\index_holdings_periods\\data\\output2.xlsx", index=False
-)
+# Add cumulate returns
+df_index = returns_helpers.cumulate_returns(df_index, PERIODS_TO_TEST)
+
 # Graph
-graph_helpers.plot_line_graph(df_index_returns, PERIODS_TO_TEST)
+graph_helpers.plot_line_graph(df_index, PERIODS_TO_TEST)
+
+
+# # Get adjusted, weighted ctr of consituents for different periods
+# df = manipulations_manager.full_index_constituents_data(
+#     df_weights, df_prices, PERIODS_TO_TEST
+# )
+# df.to_excel(
+#     "C:\\Python\\research\\index_holdings_periods\\data\\output.xlsx", index=False
+# )
+
+# # Group to index returns and cumulate
+# df_index_returns = manipulations_manager.index_returns(df, PERIODS_TO_TEST)
+# print(df_index_returns)
+# df_index_returns.to_excel(
+#     "C:\\Python\\research\\index_holdings_periods\\data\\output2.xlsx", index=False
+# )
+# TODO
+"""
+Check weights sum to 100%
+Look into why there's no data missing at 2024...you can't hold for 5yrs from 2023
+Impact of delisting
+
+"""

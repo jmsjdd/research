@@ -30,4 +30,3 @@ def plot_line_graph(df, list_of_periods):
     plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
     plt.tight_layout()  # Adjust layout to prevent clipping of labels
     plt.show()
-    print("hi")

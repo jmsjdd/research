@@ -1,16 +1,13 @@
 from . import portfolio_build_helpers
-from . import portfolio_build_utils
 
 
 def run(df, list_of_periods):
     portfolio_build_helpers.weights_for_portfolios(df, list_of_periods)
+    portfolio_build_helpers.weighted_return(df, list_of_periods)
 
 
-# TODO
 """
 Get weight* return for each date
-For 
-
  Returns are calculated following the methodology used by Hou, Xue and Zhang (2017). 
  For a holding period greater than one month, such as when rebalancing is annual, for 
  a given decile in each month, there are 12 sub-deciles, each of which is initiated in 
