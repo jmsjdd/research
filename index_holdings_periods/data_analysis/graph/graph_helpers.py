@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-def plot_line_graph(df, list_of_periods):
+def plot_line_graph(df, list_of_periods, title):
     """
     Create a line graph for the DataFrame with columns specified in list_of_periods and the 'date' column.
 
@@ -22,7 +22,7 @@ def plot_line_graph(df, list_of_periods):
     # Add labels and title
     plt.xlabel("Date")
     plt.ylabel("Cumulative Returns")
-    plt.title("Cumulative Returns Over Time")
+    plt.title(title)
     plt.legend(loc="upper left")  # Adjust legend location if needed
     plt.grid(True)
 

@@ -49,19 +49,28 @@ returns_helpers.monthly_constituent_returns(df_all)
 # Build portfolios for each period
 portfolio_build_manager.run(df_all, PERIODS_TO_TEST)
 
-df_all.to_excel(
-    "C:\\Python\\research\\index_holdings_periods\\data\\output1.xlsx", index=False
-)
+# df_all.to_excel(
+#     "C:\\Python\\research\\index_holdings_periods\\data\\output1.xlsx", index=False
+# )
 
 # Aggregate constituents into single portfolio
-df_index = index_aggregation_manager.run(df_all, PERIODS_TO_TEST)
+df_index, df_index_same_start_dt = index_aggregation_manager.run(
+    df_all, PERIODS_TO_TEST
+)
 
 # Add cumulate returns
 df_index = returns_helpers.cumulate_returns(df_index, PERIODS_TO_TEST)
+df_index_same_start_dt = returns_helpers.cumulate_returns(
+    df_index_same_start_dt, PERIODS_TO_TEST
+)
 
 # Graph
-graph_helpers.plot_line_graph(df_index, PERIODS_TO_TEST)
-
+graph_helpers.plot_line_graph(df_index, PERIODS_TO_TEST, "Cumulative returns")
+graph_helpers.plot_line_graph(
+    df_index_same_start_dt,
+    PERIODS_TO_TEST,
+    "Cumulative returns with the same start date",
+)
 
 # # Get adjusted, weighted ctr of consituents for different periods
 # df = manipulations_manager.full_index_constituents_data(

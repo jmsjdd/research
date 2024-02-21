@@ -6,5 +6,5 @@
 
 # ignores all pdfs and data files
 *.pdf
-output.xlsx
-output2.xlsx
+*.xlsx
+*.csv
