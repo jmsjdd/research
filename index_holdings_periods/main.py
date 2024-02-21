@@ -11,7 +11,7 @@ import os
 create_xlsx_to_get_prices = False
 FILENAME_CONSTITUENT_WEIGHTS = "index_nzx50.csv"
 FILENAME_CONSTITUENT_PRICING = "index_history_pricing.xlsx"
-PERIODS_TO_TEST = [1, 6, 12, 24, 36, 60, 120]
+PERIODS_TO_TEST = [1, 2, 6, 12, 24, 36, 60, 120]
 # PATH_TO_DATA_FOLDER = "C:\\Python\\research\\index_holdings_periods\\data\\"
 
 # Get paths
@@ -48,10 +48,7 @@ returns_helpers.monthly_constituent_returns(df_all)
 
 # Build portfolios for each period
 portfolio_build_manager.run(df_all, PERIODS_TO_TEST)
-
-# df_all.to_excel(
-#     "C:\\Python\\research\\index_holdings_periods\\data\\output1.xlsx", index=False
-# )
+print("Portfolios built")
 
 # Aggregate constituents into single portfolio
 df_index, df_index_same_start_dt = index_aggregation_manager.run(
@@ -63,6 +60,7 @@ df_index = returns_helpers.cumulate_returns(df_index, PERIODS_TO_TEST)
 df_index_same_start_dt = returns_helpers.cumulate_returns(
     df_index_same_start_dt, PERIODS_TO_TEST
 )
+print("Data aggregated and cumulative returns added")
 
 # Graph
 graph_helpers.plot_line_graph(df_index, PERIODS_TO_TEST, "Cumulative returns")
@@ -72,24 +70,11 @@ graph_helpers.plot_line_graph(
     "Cumulative returns with the same start date",
 )
 
-# # Get adjusted, weighted ctr of consituents for different periods
-# df = manipulations_manager.full_index_constituents_data(
-#     df_weights, df_prices, PERIODS_TO_TEST
-# )
-df_index.to_excel(
-    "C:\\Python\\research\\index_holdings_periods\\data\\output.xlsx", index=False
-)
-
-# # Group to index returns and cumulate
-# df_index_returns = manipulations_manager.index_returns(df, PERIODS_TO_TEST)
-# print(df_index_returns)
 # df_index_returns.to_excel(
 #     "C:\\Python\\research\\index_holdings_periods\\data\\output2.xlsx", index=False
 # )
 # TODO
 """
-Check weights sum to 100%
-Look into why there's no data missing at 2024...you can't hold for 5yrs from 2023
-Impact of delisting
+Limitation: currently does not re-distribute de-list company funds and underweights investments afterwards
 
 """
