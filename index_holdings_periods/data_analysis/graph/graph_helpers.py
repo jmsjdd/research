@@ -26,6 +26,9 @@ def plot_line_graph(df, list_of_periods, title):
     plt.legend(loc="upper left")  # Adjust legend location if needed
     plt.grid(True)
 
+    # Automatically adjust axis limits to fit the data
+    plt.autoscale()
+
     # Show the plot
     plt.xticks(rotation=45)  # Rotate x-axis labels for better readability
     plt.tight_layout()  # Adjust layout to prevent clipping of labels

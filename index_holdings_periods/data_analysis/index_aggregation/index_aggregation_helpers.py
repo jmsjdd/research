@@ -26,5 +26,9 @@ def remove_missing_data(dataframe, list_of_periods, equal_start_dates=True):
             period_min_index = min_date_row + max(list_of_periods) - 1
         df.loc[:, col] = df.loc[:, col].where(df.index >= period_min_index, 0)
 
+    if equal_start_dates:
+        col = f"fwd_weighted_return_mthly_{max(list_of_periods)}"
+        df = df[df[col] != 0]
+
     return df
     # print(df)

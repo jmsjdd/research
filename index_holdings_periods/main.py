@@ -11,7 +11,7 @@ import os
 create_xlsx_to_get_prices = False
 FILENAME_CONSTITUENT_WEIGHTS = "index_nzx50.csv"
 FILENAME_CONSTITUENT_PRICING = "index_history_pricing.xlsx"
-PERIODS_TO_TEST = [1, 2, 6, 12, 24, 36, 60, 120]
+PERIODS_TO_TEST = [1, 3, 6, 12, 24, 120]
 # PATH_TO_DATA_FOLDER = "C:\\Python\\research\\index_holdings_periods\\data\\"
 
 # Get paths
