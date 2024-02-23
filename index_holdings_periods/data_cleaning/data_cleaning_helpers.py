@@ -123,3 +123,22 @@ def constituent_pricing(path_to_data):
     df["date"] = df["date"].apply(data_cleaning_utils.end_of_month)
 
     return df
+
+
+def calculate_equal_weights(df):
+    # Calculate the count of IDs for each date
+    id_counts_per_date = df.groupby("date").count()["ID"].reset_index()
+    id_counts_per_date.columns = ["date", "id_count"]
+
+    # Merge the count of IDs back into the original DataFrame
+    df = df.merge(id_counts_per_date, on="date", suffixes=("", "_count"))
+
+    # Add a new column for equal weights
+    df["equal_weight"] = 1 / df["id_count"]
+
+    # Drop the temporary count column if it's no longer needed
+    df.drop(columns=["id_count", "weight"], inplace=True)
+    df = df.rename(columns={"equal_weight": "weight"})
+    df = df[["date", "ID", "weight"]]
+
+    return df

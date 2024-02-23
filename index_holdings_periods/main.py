@@ -34,41 +34,51 @@ venv_directory = f"{current_directory}\\{project_name}\\{venv_name}\\"
 #     operating_systems.helper.activate_virtualenv()
 
 # Clean data
-df_weights, df_prices, df_all = data_cleaning_manager.run(
+df_weights, df_prices, df_all, df_all_equal_weights = data_cleaning_manager.run(
     constituent_weights_directory, constituent_pricing_directory
 )
+
+value_vs_equal_weighted = [df_all, df_all_equal_weights]
+
 print("Data cleaned")
 
 # Create file to get prices
 if create_xlsx_to_get_prices == True:
     file_creation(df_weights, data_directory, "nzx50_constituents_for_bb.xlsx")
 
-# Add returns
-returns_helpers.monthly_constituent_returns(df_all)
+for w in value_vs_equal_weighted:
+    # Add returns
+    df_returns = returns_helpers.monthly_constituent_returns(w)
 
-# Build portfolios for each period
-portfolio_build_manager.run(df_all, PERIODS_TO_TEST)
-print("Portfolios built")
+    # Build portfolios for each period
+    portfolio_build_manager.run(df_returns, PERIODS_TO_TEST)
+    print("Portfolios built")
 
-# Aggregate constituents into single portfolio
-df_index, df_index_same_start_dt = index_aggregation_manager.run(
-    df_all, PERIODS_TO_TEST
-)
+    # Aggregate constituents into single portfolio
+    df_index, df_index_same_start_dt = index_aggregation_manager.run(
+        df_returns, PERIODS_TO_TEST
+    )
 
-# Add cumulate returns
-df_index = returns_helpers.cumulate_returns(df_index, PERIODS_TO_TEST)
-df_index_same_start_dt = returns_helpers.cumulate_returns(
-    df_index_same_start_dt, PERIODS_TO_TEST
-)
-print("Data aggregated and cumulative returns added")
+    # Add cumulate returns
+    df_index = returns_helpers.cumulate_returns(df_index, PERIODS_TO_TEST)
+    df_index_same_start_dt = returns_helpers.cumulate_returns(
+        df_index_same_start_dt, PERIODS_TO_TEST
+    )
+    print("Data aggregated and cumulative returns added")
 
-# Graph
-graph_helpers.plot_line_graph(df_index, PERIODS_TO_TEST, "Cumulative returns")
-graph_helpers.plot_line_graph(
-    df_index_same_start_dt,
-    PERIODS_TO_TEST,
-    "Cumulative returns with the same start date",
-)
+    # Graph
+    graph_helpers.plot_line_graph(df_index, PERIODS_TO_TEST, "Cumulative returns")
+    graph_helpers.plot_line_graph(
+        df_index_same_start_dt,
+        PERIODS_TO_TEST,
+        "Cumulative returns with the same start date",
+    )
+
+#####################################################################################
+# Equally Weighted Portfolios
+#####################################################################################
+# Create equally weighted portfolio
+
 
 # df_index_returns.to_excel(
 #     "C:\\Python\\research\\index_holdings_periods\\data\\output2.xlsx", index=False
