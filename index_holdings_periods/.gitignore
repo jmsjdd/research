@@ -1,5 +1,5 @@
 # Ignore virtual environment
-.venv_example_project/
+.venv_example_index_holdings_periods/
 
 # Ignore environmental variables (passwords etc)
 .env
